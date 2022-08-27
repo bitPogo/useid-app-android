@@ -21,12 +21,12 @@ import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.digitalService.useID.R
-import de.digitalService.useID.SecureStorageManagerInterface
 import de.digitalService.useID.getLogger
 import de.digitalService.useID.idCardInterface.EIDInteractionEvent
 import de.digitalService.useID.idCardInterface.IDCardInteractionException
 import de.digitalService.useID.idCardInterface.IDCardManager
 import de.digitalService.useID.models.ScanError
+import de.digitalService.useID.pinstorage.PinStorageContract
 import de.digitalService.useID.ui.components.ScreenWithTopBar
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
 import de.digitalService.useID.ui.screens.ScanScreen
@@ -121,7 +121,7 @@ interface SetupScanViewModelInterface {
 @HiltViewModel
 class SetupScanViewModel @Inject constructor(
     private val coordinator: SetupCoordinator,
-    private val secureStorageManager: SecureStorageManagerInterface,
+    private val pinStorage: PinStorageContract.PinStorage,
     private val idCardManager: IDCardManager,
     @Nullable coroutineScope: CoroutineScope? = null
 ) :
@@ -138,7 +138,7 @@ class SetupScanViewModel @Inject constructor(
         private set
 
     override fun startSettingPIN(context: Context) {
-        val transportPIN = secureStorageManager.loadTransportPIN() ?: run {
+        val transportPIN = pinStorage.transportPin ?: run {
             logger.error("Transport PIN not available.")
             errorState = ScanError.Other(null)
             return
@@ -160,7 +160,7 @@ class SetupScanViewModel @Inject constructor(
     }
 
     private fun executePINManagement(transportPIN: String, context: Context) {
-        val newPIN = secureStorageManager.loadPersonalPIN() ?: run {
+        val newPIN = pinStorage.personalPin ?: run {
             logger.error("Personal PIN not available.")
             errorState = ScanError.Other(null)
             return

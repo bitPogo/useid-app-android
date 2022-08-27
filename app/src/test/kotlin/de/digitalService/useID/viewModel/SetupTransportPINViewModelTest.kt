@@ -1,6 +1,6 @@
 package de.digitalService.useID.viewModel
 
-import de.digitalService.useID.SecureStorageManager
+import de.digitalService.useID.pinstorage.PinStorageContract.PinStorage
 import de.digitalService.useID.ui.screens.setup.SetupTransportPINViewModel
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
 import io.mockk.impl.annotations.MockK
@@ -17,7 +17,7 @@ class SetupTransportPINViewModelTest {
     lateinit var coordinatorMock: SetupCoordinator
 
     @MockK(relaxUnitFun = true)
-    lateinit var secureStorageManagerMock: SecureStorageManager
+    lateinit var pinStorage: PinStorage
 
     private val defaultPin = ""
 
@@ -27,7 +27,7 @@ class SetupTransportPINViewModelTest {
 
         val viewModel = SetupTransportPINViewModel(
             coordinatorMock,
-            secureStorageManagerMock
+            pinStorage
         )
 
         viewModel.onInputChanged(testValue)
@@ -35,7 +35,9 @@ class SetupTransportPINViewModelTest {
         Assertions.assertEquals(testValue, viewModel.transportPIN)
 
         verify(exactly = 0) { coordinatorMock.onTransportPINEntered() }
-        verify(exactly = 0) { secureStorageManagerMock.setTransportPIN(testValue) }
+        verify(exactly = 0) {
+            pinStorage.transportPin = testValue
+        }
     }
 
     @Test
@@ -44,7 +46,7 @@ class SetupTransportPINViewModelTest {
 
         val viewModel = SetupTransportPINViewModel(
             coordinatorMock,
-            secureStorageManagerMock
+            pinStorage
         )
 
         viewModel.onInputChanged(testValue)
@@ -53,14 +55,16 @@ class SetupTransportPINViewModelTest {
         Assertions.assertEquals(defaultPin, viewModel.transportPIN)
 
         verify(exactly = 1) { coordinatorMock.onTransportPINEntered() }
-        verify(exactly = 1) { secureStorageManagerMock.setTransportPIN(testValue) }
+        verify(exactly = 1) {
+            pinStorage.transportPin = testValue
+        }
     }
 
     @Test
     fun onDoneTapped_NoPreviousInput() {
         val viewModel = SetupTransportPINViewModel(
             coordinatorMock,
-            secureStorageManagerMock
+            pinStorage
         )
 
         viewModel.onDoneTapped()
@@ -68,7 +72,9 @@ class SetupTransportPINViewModelTest {
         Assertions.assertEquals(defaultPin, viewModel.transportPIN)
 
         verify(exactly = 0) { coordinatorMock.onTransportPINEntered() }
-        verify(exactly = 0) { secureStorageManagerMock.setTransportPIN(any()) }
+        verify(exactly = 0) {
+            pinStorage.transportPin = any()
+        }
     }
 
     @Test
@@ -77,7 +83,7 @@ class SetupTransportPINViewModelTest {
 
         val viewModel = SetupTransportPINViewModel(
             coordinatorMock,
-            secureStorageManagerMock
+            pinStorage
         )
 
         viewModel.onInputChanged(testValue)
@@ -86,7 +92,9 @@ class SetupTransportPINViewModelTest {
         Assertions.assertEquals(testValue, viewModel.transportPIN)
 
         verify(exactly = 0) { coordinatorMock.onTransportPINEntered() }
-        verify(exactly = 0) { secureStorageManagerMock.setTransportPIN(testValue) }
+        verify(exactly = 0) {
+            pinStorage.transportPin = any()
+        }
     }
 
     @Test
@@ -95,7 +103,7 @@ class SetupTransportPINViewModelTest {
 
         val viewModel = SetupTransportPINViewModel(
             coordinatorMock,
-            secureStorageManagerMock
+            pinStorage
         )
 
         viewModel.onInputChanged(testValue)
@@ -104,6 +112,8 @@ class SetupTransportPINViewModelTest {
         Assertions.assertEquals(testValue, viewModel.transportPIN)
 
         verify(exactly = 0) { coordinatorMock.onTransportPINEntered() }
-        verify(exactly = 0) { secureStorageManagerMock.setTransportPIN(testValue) }
+        verify(exactly = 0) {
+            pinStorage.transportPin = any()
+        }
     }
 }

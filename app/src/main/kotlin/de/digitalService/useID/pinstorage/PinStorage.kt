@@ -2,7 +2,7 @@ package de.digitalService.useID.pinstorage
 
 import android.content.Context
 import android.content.SharedPreferences
-import de.digitalService.useID.pinstorage.PinStorageContract.SecuredSharedPreferencesFactory
+import de.digitalService.useID.pinstorage.PinStorageContract.EncryptedSharedPreferencesFactory
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import de.digitalService.useID.pinstorage.PinStorageContract.PIN_FLAVOUR
@@ -50,7 +50,7 @@ class PinStorage private constructor(
     }
 
     class PinStorageFactory(
-        private val sharedPreferencesFactory: SecuredSharedPreferencesFactory
+        private val sharedPreferencesFactory: EncryptedSharedPreferencesFactory
     ): PinStorageContract.PinStorageFactory {
         override fun getInstance(context: Context): PinStorageContract.PinStorage {
             return PinStorage(

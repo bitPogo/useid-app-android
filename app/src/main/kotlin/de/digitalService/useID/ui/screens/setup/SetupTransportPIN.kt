@@ -17,9 +17,8 @@ import androidx.lifecycle.ViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.digitalService.useID.R
-import de.digitalService.useID.SecureStorageManager
-import de.digitalService.useID.SecureStorageManagerInterface
 import de.digitalService.useID.getLogger
+import de.digitalService.useID.pinstorage.PinStorageContract
 import de.digitalService.useID.ui.components.pin.TransportPINEntryField
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
 import de.digitalService.useID.ui.theme.UseIDTheme
@@ -61,7 +60,7 @@ interface SetupTransportPINViewModelInterface {
 
 @HiltViewModel
 class SetupTransportPINViewModel(
-    private val secureStorageManager: SecureStorageManagerInterface,
+    private val pinStorage: PinStorageContract.PinStorage,
     private val onDone: () -> Unit
 ) :
     ViewModel(), SetupTransportPINViewModelInterface {
@@ -70,9 +69,9 @@ class SetupTransportPINViewModel(
     @Inject
     constructor(
         coordinator: SetupCoordinator,
-        secureStorageManager: SecureStorageManager
+        pinStorage: PinStorageContract.PinStorage,
     ) : this(
-        secureStorageManager = secureStorageManager,
+        pinStorage = pinStorage,
         onDone = coordinator::onTransportPINEntered
     )
 
@@ -85,7 +84,7 @@ class SetupTransportPINViewModel(
 
     override fun onDoneTapped() {
         if (transportPIN.length == 5) {
-            secureStorageManager.setTransportPIN(transportPIN)
+            pinStorage.transportPin = transportPIN
             transportPIN = ""
             onDone()
         } else {

@@ -7,7 +7,7 @@ import androidx.security.crypto.MasterKey
 import de.digitalService.useID.BuildConfig
 
 interface PinStorageContract {
-    fun interface SecuredSharedPreferencesFactory {
+    fun interface EncryptedSharedPreferencesFactory {
         fun getInstance(context: Context): SharedPreferences
     }
 

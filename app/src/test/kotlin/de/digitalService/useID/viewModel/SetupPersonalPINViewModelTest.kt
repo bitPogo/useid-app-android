@@ -1,6 +1,6 @@
 package de.digitalService.useID.viewModel
 
-import de.digitalService.useID.SecureStorageManager
+import de.digitalService.useID.pinstorage.PinStorageContract.PinStorage
 import de.digitalService.useID.ui.screens.setup.SetupPersonalPINViewModel
 import de.digitalService.useID.ui.screens.setup.SetupPersonalPINViewModelInterface
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
@@ -25,7 +25,7 @@ class SetupPersonalPINViewModelTest {
     lateinit var coordinatorMock: SetupCoordinator
 
     @MockK(relaxUnitFun = true)
-    lateinit var secureStorageManagerMock: SecureStorageManager
+    lateinit var pinStorage: PinStorage
 
     val defaultValue = ""
 
@@ -44,7 +44,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -63,7 +63,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -82,7 +82,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -100,7 +100,7 @@ class SetupPersonalPINViewModelTest {
         fun notNumericOnly(testValue: String) {
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -120,7 +120,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -142,7 +142,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -153,7 +153,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals(testValue, viewModel.pin1)
             assertEquals(testValue, viewModel.pin2)
 
-            verify(exactly = 1) { secureStorageManagerMock.setPersonalPIN(testValue) }
+            verify(exactly = 1) {
+                pinStorage.personalPin = testValue
+            }
             verify(exactly = 1) { coordinatorMock.onPersonalPINEntered() }
         }
 
@@ -163,7 +165,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -174,7 +176,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals(testValue, viewModel.pin1)
             assertEquals(testValue, viewModel.pin2)
 
-            verify(exactly = 0) { secureStorageManagerMock.setPersonalPIN(testValue) }
+            verify(exactly = 0) {
+                pinStorage.personalPin = any()
+            }
             verify(exactly = 0) { coordinatorMock.onPersonalPINEntered() }
         }
 
@@ -184,7 +188,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -195,7 +199,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals(testValue, viewModel.pin1)
             assertEquals(testValue, viewModel.pin2)
 
-            verify(exactly = 0) { secureStorageManagerMock.setPersonalPIN(testValue) }
+            verify(exactly = 0) {
+                pinStorage.personalPin = any()
+            }
             verify(exactly = 0) { coordinatorMock.onPersonalPINEntered() }
 
         }
@@ -205,7 +211,7 @@ class SetupPersonalPINViewModelTest {
         fun notNumericOnly(testValue: String) {
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -216,7 +222,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals("", viewModel.pin1)
             assertEquals("", viewModel.pin2)
 
-            verify(exactly = 0) { secureStorageManagerMock.setPersonalPIN(testValue) }
+            verify(exactly = 0) {
+                pinStorage.personalPin = any()
+            }
             verify(exactly = 0) { coordinatorMock.onPersonalPINEntered() }
         }
 
@@ -227,7 +235,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -238,7 +246,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals("", viewModel.pin1)
             assertEquals("", viewModel.pin2)
 
-            verify(exactly = 0) { secureStorageManagerMock.setPersonalPIN(testValue) }
+            verify(exactly = 0) {
+                pinStorage.personalPin = any()
+            }
             verify(exactly = 0) { coordinatorMock.onPersonalPINEntered() }
         }
 
@@ -249,7 +259,7 @@ class SetupPersonalPINViewModelTest {
 
             val viewModel = SetupPersonalPINViewModel(
                 coordinatorMock,
-                secureStorageManagerMock
+                pinStorage
             )
 
             assertEquals(defaultValue, viewModel.pin1)
@@ -267,7 +277,9 @@ class SetupPersonalPINViewModelTest {
             assertEquals(defaultValue, viewModel.pin1)
             assertEquals(defaultValue, viewModel.pin2)
 
-            verify(exactly = 0) { secureStorageManagerMock.setPersonalPIN(testValue1) }
+            verify(exactly = 0) {
+                pinStorage.personalPin = any()
+            }
             verify(exactly = 0) { coordinatorMock.onPersonalPINEntered() }
         }
     }

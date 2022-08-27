@@ -1,11 +1,11 @@
 package de.digitalService.useID.viewModel
 
 import android.content.Context
-import de.digitalService.useID.SecureStorageManager
 import de.digitalService.useID.idCardInterface.EIDInteractionEvent
 import de.digitalService.useID.idCardInterface.IDCardInteractionException
 import de.digitalService.useID.idCardInterface.IDCardManager
 import de.digitalService.useID.models.ScanError
+import de.digitalService.useID.pinstorage.PinStorageContract.PinStorage
 import de.digitalService.useID.ui.screens.setup.SetupScanViewModel
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
 import io.mockk.*
@@ -28,7 +28,7 @@ class SetupScanViewModelTest {
     lateinit var coordinatorMock: SetupCoordinator
 
     @MockK(relaxUnitFun = true)
-    lateinit var secureStorageManagerMock: SecureStorageManager
+    lateinit var pinStorage: PinStorage
 
     @MockK(relaxUnitFun = true)
     lateinit var idCardManagerMock: IDCardManager
@@ -43,8 +43,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val pinCallback = mockk<(String, String) -> Unit>()
         every { pinCallback(transportPIN, personalPIN) } just Runs
@@ -57,7 +57,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -69,8 +69,8 @@ class SetupScanViewModelTest {
         verify(exactly = 1) { idCardManagerMock.changePin(contextMock) }
         verify(exactly = 1) { pinCallback(transportPIN, personalPIN) }
         verify(exactly = 1) { coordinatorMock.onSettingPINSucceeded() }
-        verify(exactly = 1) { secureStorageManagerMock.loadPersonalPIN() }
-        verify(exactly = 1) { secureStorageManagerMock.loadTransportPIN() }
+        verify(exactly = 1) { pinStorage.personalPin }
+        verify(exactly = 1) { pinStorage.transportPin }
 
         assertNull(viewModel.errorState)
     }
@@ -81,11 +81,11 @@ class SetupScanViewModelTest {
         val testScope = CoroutineScope(StandardTestDispatcher(testScheduler))
 
         val transportPIN = null
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
+        every { pinStorage.transportPin } returns transportPIN
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -106,12 +106,12 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = null
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -132,8 +132,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         every { idCardManagerMock.changePin(contextMock) } returns flow {
             throw IDCardInteractionException.CardDeactivated
@@ -141,7 +141,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -163,8 +163,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         every { idCardManagerMock.changePin(contextMock) } returns flow {
             throw IDCardInteractionException.CardBlocked
@@ -172,7 +172,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -194,8 +194,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val exception_message = "exception_message"
         every { idCardManagerMock.changePin(contextMock) } returns flow {
@@ -204,7 +204,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -226,8 +226,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val pinCallback = mockk<(String, String) -> Unit>()
         every { pinCallback(transportPIN, personalPIN) } just Runs
@@ -242,7 +242,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -265,8 +265,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val pinCallback = mockk<(String, String, String) -> Unit>()
 
@@ -276,7 +276,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -299,8 +299,8 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadTransportPIN() } returns transportPIN
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.transportPin } returns transportPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val pinCallback = mockk<(String) -> Unit>()
 
@@ -310,7 +310,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -333,7 +333,7 @@ class SetupScanViewModelTest {
 
         val transportPIN = "12345"
         val personalPIN = "123456"
-        every { secureStorageManagerMock.loadPersonalPIN() } returns personalPIN
+        every { pinStorage.personalPin } returns personalPIN
 
         val pinCallback = mockk<(String, String) -> Unit>()
         every { pinCallback(transportPIN, personalPIN) } just Runs
@@ -346,7 +346,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -358,8 +358,8 @@ class SetupScanViewModelTest {
         verify(exactly = 1) { idCardManagerMock.changePin(contextMock) }
         verify(exactly = 1) { pinCallback(transportPIN, personalPIN) }
         verify(exactly = 1) { coordinatorMock.onSettingPINSucceeded() }
-        verify(exactly = 1) { secureStorageManagerMock.loadPersonalPIN() }
-        verify(exactly = 0) { secureStorageManagerMock.loadTransportPIN() }
+        verify(exactly = 1) { pinStorage.personalPin }
+        verify(exactly = 0) { pinStorage.transportPin }
 
         assertNull(viewModel.errorState)
     }
@@ -371,7 +371,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -381,8 +381,8 @@ class SetupScanViewModelTest {
         verify(exactly = 1) { coordinatorMock.cancelSetup() }
         verify(exactly = 0) { coordinatorMock.onSettingPINSucceeded() }
         verify(exactly = 0) { idCardManagerMock.changePin(contextMock) }
-        verify(exactly = 0) { secureStorageManagerMock.loadPersonalPIN() }
-        verify(exactly = 0) { secureStorageManagerMock.loadTransportPIN() }
+        verify(exactly = 0) { pinStorage.personalPin }
+        verify(exactly = 0) { pinStorage.transportPin }
 
         assertNull(viewModel.errorState)
     }
@@ -395,7 +395,7 @@ class SetupScanViewModelTest {
 
         val viewModel = SetupScanViewModel(
             coordinatorMock,
-            secureStorageManagerMock,
+            pinStorage,
             idCardManagerMock,
             testScope
         )
@@ -405,8 +405,8 @@ class SetupScanViewModelTest {
         verify(exactly = 0) { coordinatorMock.cancelSetup() }
         verify(exactly = 0) { coordinatorMock.onSettingPINSucceeded() }
         verify(exactly = 0) { idCardManagerMock.changePin(contextMock) }
-        verify(exactly = 0) { secureStorageManagerMock.loadPersonalPIN() }
-        verify(exactly = 0) { secureStorageManagerMock.loadTransportPIN() }
+        verify(exactly = 0) { pinStorage.personalPin }
+        verify(exactly = 0) { pinStorage.transportPin }
 
         assertNull(viewModel.errorState)
     }

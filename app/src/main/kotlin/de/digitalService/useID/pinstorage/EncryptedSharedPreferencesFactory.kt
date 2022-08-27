@@ -8,7 +8,7 @@ import de.digitalService.useID.pinstorage.PinStorageContract.Companion.PREFERENC
 import de.digitalService.useID.pinstorage.PinStorageContract.Companion.preferenceKeyEncryptionSchema
 import de.digitalService.useID.pinstorage.PinStorageContract.Companion.preferenceValueEncryptionSchema
 
-object SecuredSharedPreferencesFactory : PinStorageContract.SecuredSharedPreferencesFactory {
+object EncryptedSharedPreferencesFactory : PinStorageContract.EncryptedSharedPreferencesFactory {
     private fun resolveMasterKey(
         context: Context
     ): MasterKey =  MasterKey.Builder(context).setKeyScheme(PinStorageContract.masterKeySchema).build()

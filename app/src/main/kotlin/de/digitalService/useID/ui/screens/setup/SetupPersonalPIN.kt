@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.digitalService.useID.R
-import de.digitalService.useID.SecureStorageManagerInterface
+import de.digitalService.useID.pinstorage.PinStorageContract
 import de.digitalService.useID.ui.components.pin.PINEntryField
 import de.digitalService.useID.ui.coordinators.SetupCoordinator
 import de.digitalService.useID.ui.theme.UseIDTheme
@@ -138,8 +138,10 @@ interface SetupPersonalPINViewModelInterface {
 }
 
 @HiltViewModel
-class SetupPersonalPINViewModel @Inject constructor(private val coordinator: SetupCoordinator, private val secureStorageManager: SecureStorageManagerInterface) :
-    ViewModel(),
+class SetupPersonalPINViewModel @Inject constructor(
+    private val coordinator: SetupCoordinator,
+    private val pinStorage: PinStorageContract.PinStorage
+) : ViewModel(),
     SetupPersonalPINViewModelInterface {
     override var pin1 by mutableStateOf("")
         private set
@@ -186,7 +188,7 @@ class SetupPersonalPINViewModel @Inject constructor(private val coordinator: Set
 
     private fun handlePINInput() {
         if (pin1 == pin2) {
-            secureStorageManager.setPersonalPIN(pin1)
+            pinStorage.personalPin  = pin1
             coordinator.onPersonalPINEntered()
         } else {
             pin1 = ""

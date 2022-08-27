@@ -4,20 +4,18 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import de.digitalService.useID.pinstorage.PinStorageContract
-import de.digitalService.useID.pinstorage.SecuredSharedPreferencesFactory
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class SecuredSharedPreferencesFactoryTest {
+class EncryptedSharedPreferencesFactoryTest {
     @Test
-    fun `It fulfils SecuredSharedPreferencesFactory`()  {
-        val factory: Any = SecuredSharedPreferencesFactory
+    fun `It fulfils EncryptedSharedPreferencesFactory`()  {
+        val factory: Any = EncryptedSharedPreferencesFactory
 
         assertTrue {
-            factory is PinStorageContract.SecuredSharedPreferencesFactory
+            factory is PinStorageContract.EncryptedSharedPreferencesFactory
         }
     }
 
@@ -40,7 +38,7 @@ class SecuredSharedPreferencesFactoryTest {
         } returns expectedPreferences
 
         // When
-        val actualPreferences = SecuredSharedPreferencesFactory.getInstance(context)
+        val actualPreferences = EncryptedSharedPreferencesFactory.getInstance(context)
 
         // Then
         assertSame(

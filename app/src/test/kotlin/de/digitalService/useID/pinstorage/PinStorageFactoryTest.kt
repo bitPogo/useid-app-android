@@ -4,7 +4,7 @@ import android.content.Context
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import de.digitalService.useID.pinstorage.PinStorageContract.SecuredSharedPreferencesFactory
+import de.digitalService.useID.pinstorage.PinStorageContract.EncryptedSharedPreferencesFactory
 import de.digitalService.useID.pinstorage.PinStorageContract.PinStorage
 import de.digitalService.useID.pinstorage.PinStorage.PinStorageFactory
 import io.mockk.every
@@ -23,13 +23,13 @@ class PinStorageFactoryTest {
     @Test
     fun `Given getInstance is called with an Context it returns a PinStorage`() {
         // Given
-        val securedSharedPreferencesFactory: SecuredSharedPreferencesFactory = mockk()
+        val encryptedSharedPreferencesFactory: EncryptedSharedPreferencesFactory = mockk()
         val context: Context = mockk()
 
-        every { securedSharedPreferencesFactory.getInstance(any()) } returns mockk()
+        every { encryptedSharedPreferencesFactory.getInstance(any()) } returns mockk()
 
         // When
-        val actualPinStorage: Any = PinStorageFactory(securedSharedPreferencesFactory).getInstance(context)
+        val actualPinStorage: Any = PinStorageFactory(encryptedSharedPreferencesFactory).getInstance(context)
 
         // Then
         assertTrue {
@@ -37,7 +37,7 @@ class PinStorageFactoryTest {
         }
 
         verify(exactly = 1) {
-            securedSharedPreferencesFactory.getInstance(context)
+            encryptedSharedPreferencesFactory.getInstance(context)
         }
     }
 }
