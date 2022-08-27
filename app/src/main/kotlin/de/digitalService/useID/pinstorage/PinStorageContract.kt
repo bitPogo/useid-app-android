@@ -1,9 +1,10 @@
-package de.digitalService.useID
+package de.digitalService.useID.pinstorage
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import de.digitalService.useID.BuildConfig
 
 interface PinStorageContract {
     fun interface SecuredSharedPreferencesFactory {

@@ -1,12 +1,12 @@
-package de.digitalService.useID
+package de.digitalService.useID.pinstorage
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import de.digitalService.useID.PinStorageContract.Companion.PREFERENCE_FILE_NAME
-import de.digitalService.useID.PinStorageContract.Companion.preferenceKeyEncryptionSchema
-import de.digitalService.useID.PinStorageContract.Companion.preferenceValueEncryptionSchema
+import de.digitalService.useID.pinstorage.PinStorageContract.Companion.PREFERENCE_FILE_NAME
+import de.digitalService.useID.pinstorage.PinStorageContract.Companion.preferenceKeyEncryptionSchema
+import de.digitalService.useID.pinstorage.PinStorageContract.Companion.preferenceValueEncryptionSchema
 
 object SecuredSharedPreferencesFactory : PinStorageContract.SecuredSharedPreferencesFactory {
     private fun resolveMasterKey(

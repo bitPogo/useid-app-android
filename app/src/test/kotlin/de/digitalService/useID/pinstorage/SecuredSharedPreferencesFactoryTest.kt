@@ -1,15 +1,17 @@
-package de.digitalService.useID
+package de.digitalService.useID.pinstorage
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import de.digitalService.useID.pinstorage.PinStorageContract
+import de.digitalService.useID.pinstorage.SecuredSharedPreferencesFactory
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class SecuredSharedPreferencesFactorySpec {
+class SecuredSharedPreferencesFactoryTest {
     @Test
     fun `It fulfils SecuredSharedPreferencesFactory`()  {
         val factory: Any = SecuredSharedPreferencesFactory
@@ -28,22 +30,22 @@ class SecuredSharedPreferencesFactorySpec {
         // Given
         val context: Context = mockk(relaxed = true)
         val masterKey: MasterKey = mockk()
-        val expected: SharedPreferences = mockk()
+        val expectedPreferences: SharedPreferences = mockk()
 
         every {
             anyConstructed<MasterKey.Builder>().setKeyScheme(any()).build()
         } returns masterKey
         every {
             EncryptedSharedPreferences.create(any(), any(), any<MasterKey>(), any(), any())
-        } returns expected
+        } returns expectedPreferences
 
         // When
-        val actual = SecuredSharedPreferencesFactory.getInstance(context)
+        val actualPreferences = SecuredSharedPreferencesFactory.getInstance(context)
 
         // Then
         assertSame(
-            actual,
-            expected,
+            actualPreferences,
+            expectedPreferences,
         )
 
         verify(exactly = 1) {
